@@ -1,5 +1,5 @@
 var table = $('#coins').DataTable( {
-  ajax: "https://api.coincap.io/v2/assets?limit=1000",
+  ajax: "https://api.coincap.io/v2/assets?limit=50",
   pageLength: 50,
   pagingType: "simple",
   scrollX: true,
