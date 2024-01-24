@@ -1,6 +1,6 @@
 var table = $('#coins').DataTable( {
-  ajax: "https://api.coincap.io/v2/assets?limit=2000",
-  pageLength: 100,
+  ajax: "https://api.coincap.io/v2/assets?limit=1000",
+  pageLength: 50,
   pagingType: "simple",
   scrollX: true,
   deferRender: true,
@@ -38,13 +38,21 @@ var table = $('#coins').DataTable( {
         searchable: false
       },
       { data: "priceUsd",
-        className: "text-right",
-        render: function ( data ) {
-          return $.fn.dataTable.render.number( ',', '.', data < 1 ? 6 : 2, '$' ).display(data);
-        },
-        defaultContent: "$?",
-        searchable: false
-      },
+  className: "text-right",
+  render: function (data, type, row) {
+    if (type === 'display') {
+      // Calculate the value by dividing marketCapUsd by 21,000,000
+      var marketCapUsd = row.marketCapUsd || 0;
+      var priceValue = marketCapUsd / 21000000;
+      
+      // Use DataTables number renderer to format the value
+      return $.fn.dataTable.render.number(',', '.', priceValue < 1 ? 6 : 2, '$').display(priceValue);
+    }
+    return data;
+  },
+  defaultContent: "$?",
+  searchable: false
+},
       { data: "volumeUsd24Hr",
         className: "text-right",
         render: $.fn.dataTable.render.number( ',', '.', 0, '$' ),
